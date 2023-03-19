@@ -8,7 +8,7 @@ class FormRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add a Journal Entry'),
+        title: const Text('New Post'),
       ),
       body: EntryForm()
     );

@@ -66,42 +66,56 @@ class _EntryFormState extends State<EntryForm> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextFormField(
-                      autofocus:true,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Number of items wasted',
-                        border: OutlineInputBorder()
+                    Semantics(
+                      button: false,
+                      enabled: true,
+                      onTapHint: 'Text form to enter the number of items wasted',
+                      child: TextFormField(
+                        autofocus:true,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Number of items wasted',
+                          border: OutlineInputBorder()
+                        ),
+                        onSaved: (value) {
+                          number = int.parse(value!);
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter a number';
+                          } else {
+                            return null;
+                          }
+                        }
                       ),
-                      onSaved: (value) {
-                        number = int.parse(value!);
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter a number';
-                        } else {
-                          return null;
-                        }
-                      }
                     ),
-                    ElevatedButton(
-                      child: Text('Post Image'),
-                      onPressed: () async {
-                        if(formKey.currentState!.validate()) {
-                          formKey.currentState!.save();
-                          retrieveLocation();
-                          String url = await uploadImage();
-                          DateTime now = DateTime.now();
-                          String formattedDate = DateFormat('kk:mm:ss EEE d MMM').format(now);
-                          
-                          FirebaseFirestore.instance
-                              .collection('wasteagram')
-                              .add({'imageUrl': url, 'number': number, 'dateTime' : formattedDate, 
-                                    'timeStamp' : FieldValue.serverTimestamp(), 
-                                    'latitude' : locationData.latitude, 'longitude' : locationData.longitude});
-                          Navigator.pop(context);                          
-                        }
-                      }
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Semantics(
+                        button: true,
+                        enabled: true,
+                        onTapHint: 'Make new entry and upload to database',
+                        child: ElevatedButton(
+                          child: Text('Post Image'),
+                          style: ElevatedButton.styleFrom(fixedSize: Size(200, 80)),
+                          onPressed: () async {
+                            if(formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
+                              retrieveLocation();
+                              String url = await uploadImage();
+                              DateTime now = DateTime.now();
+                              String formattedDate = DateFormat('kk:mm:ss EEE d MMM').format(now);
+                              
+                              FirebaseFirestore.instance
+                                  .collection('wasteagram')
+                                  .add({'imageUrl': url, 'number': number, 'dateTime' : formattedDate, 
+                                        'timeStamp' : FieldValue.serverTimestamp(), 
+                                        'latitude' : locationData.latitude, 'longitude' : locationData.longitude});
+                              Navigator.pop(context);                          
+                            }
+                          }
+                        ),
+                      ),
                     )
                   ]
                 )

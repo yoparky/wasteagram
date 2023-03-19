@@ -1,30 +1,36 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:wasteagram/main.dart';
+import 'package:wasteagram/models/post_data.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('Post object extracts correct values from named constructor 1', () {
+    String imageUrl = 'https://firebasestorage.googleapis.com/v0/b/wasteagram-2565d.appspot.com/o/1156697240.jpg2023-03-19%2003%3A08%3A45.771952?alt=media&token=0833f6f0-6de4-49c9-9690-6441a6e03e01';
+    String dateTime = 'dateTime';
+    int number = 3;
+    double longitude = 2.123;
+    double latitude = 1.321;
+    
+    final postData = PostData.fromProcessed(imageUrl, dateTime, number, longitude, latitude);
+    expect(postData.imageUrl, imageUrl);
+    expect(postData.dateTime, dateTime);
+    expect(postData.number, number);
+    expect(postData.longitude, longitude);
+    expect(postData.latitude, latitude);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  test('Post object extracts correct values from named constructor 2', () {
+    String imageUrl = 'https://firebasestorage.googleapis.com/v0/b/wasteagram-2565d.appspot.com/o/1156697240.jpg2023-03-19%2003%3A08%3A45.771952?alt=media&token=0833f6f0-6de4-49c9-9690-6441a6e03e01';
+    String dateTime = 'dateTime';
+    int number = 4;
+    double longitude = 4.123;
+    double latitude = 4.321;
+    
+    final postData = PostData.fromProcessed(imageUrl, dateTime, number, longitude, latitude);
+    expect(postData.imageUrl, imageUrl);
+    expect(postData.dateTime, dateTime);
+    expect(postData.number, number);
+    expect(postData.longitude, longitude);
+    expect(postData.latitude, latitude);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
   });
 }

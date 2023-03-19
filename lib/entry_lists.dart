@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'post_form_scaffold.dart';
-
+import 'models/post_data.dart';
 
 class EntryLists extends StatefulWidget {
   const EntryLists({Key? key}) : super(key: key);
@@ -27,19 +27,28 @@ class EntryListsState extends State<EntryLists> {
               return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    var post = snapshot.data!.docs[index];
-                    return ListTile(
-                        title: Text(post['dateTime']),
-                        trailing: Text(post['number'].toString()),
-                        onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) =>  
-                        JournalDetails(post['number'], post['dateTime'], post['imageUrl'], post['latitude'],post['longitude'])));}
+                    PostData post = PostData(snapshot, index);
+                    return Semantics(
+                      button: true,
+                      enabled: true,
+                      onTapHint: 'Show post detail',
+                      child: ListTile(
+                          title: Text(post.dateTime),
+                          trailing: Text(post.number.toString()),
+                          onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) =>  
+                          JournalDetails(post.number, post.dateTime, post.imageUrl, post.latitude,post.longitude)));}
+                      ),
                     );
                   });
             } else {
               return const Center(child: CircularProgressIndicator());
             }
           }),
-      floatingActionButton: const NewEntryButton(),
+      floatingActionButton: Semantics(
+        button: true,
+        enabled: true,
+        onTapHint: 'Add new post',
+        child: const NewEntryButton()),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
