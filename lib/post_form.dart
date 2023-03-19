@@ -23,8 +23,14 @@ class _EntryFormState extends State<EntryForm> {
   late LocationData locationData;
   
 
-  void getImage() async {
+  void getImageGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    image = File(pickedFile!.path);
+    setState(() {});
+  }
+
+  void getImageTake() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
     image = File(pickedFile!.path);
     setState(() {});
   }
@@ -47,9 +53,26 @@ class _EntryFormState extends State<EntryForm> {
 
     if (image == null) {
       return Center(
-        child: ElevatedButton(
-          child: Text('Select Photo'),
-          onPressed: () { getImage(); },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(fixedSize: const Size(200, 80)),
+                child: const Text('Select Photo'),
+                onPressed: () { getImageGallery(); },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(fixedSize: const Size(200, 80)),
+                child: const Text('Take Photo'),
+                onPressed: () { getImageTake(); },
+              ),
+            ),
+          ]
         )
       );
     } else {
@@ -60,7 +83,7 @@ class _EntryFormState extends State<EntryForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.file(image!),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Form(
                 key: formKey,
                 child: Column(
@@ -96,7 +119,6 @@ class _EntryFormState extends State<EntryForm> {
                         enabled: true,
                         onTapHint: 'Make new entry and upload to database',
                         child: ElevatedButton(
-                          child: Text('Post Image'),
                           style: ElevatedButton.styleFrom(fixedSize: Size(200, 80)),
                           onPressed: () async {
                             if(formKey.currentState!.validate()) {
@@ -113,7 +135,8 @@ class _EntryFormState extends State<EntryForm> {
                                         'latitude' : locationData.latitude, 'longitude' : locationData.longitude});
                               Navigator.pop(context);                          
                             }
-                          }
+                          },
+                          child: const Text('Post Image')
                         ),
                       ),
                     )
