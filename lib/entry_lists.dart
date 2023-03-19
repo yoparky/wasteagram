@@ -31,7 +31,8 @@ class EntryListsState extends State<EntryLists> {
                     return ListTile(
                         title: Text(post['dateTime']),
                         trailing: Text(post['number'].toString()),
-                        onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) =>  JournalDetails(post['number'], post['dateTime'], post['imageUrl'])));}
+                        onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) =>  
+                        JournalDetails(post['number'], post['dateTime'], post['imageUrl'], post['latitude'],post['longitude'])));}
                     );
                   });
             } else {
@@ -69,11 +70,13 @@ class NewEntryButton extends StatelessWidget {
 // Details page
 //
 class JournalDetails extends StatelessWidget {
-  JournalDetails(this.number, this.date, this.imageUrl, {super.key});
+  JournalDetails(this.number, this.date, this.imageUrl, this.latitude, this.longitude, {super.key});
 
   int number;
   String date;
   String imageUrl;
+  double latitude;
+  double longitude;
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +96,8 @@ class JournalDetails extends StatelessWidget {
               Text('\n$date\n', style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: 28)),
               Image.network(imageUrl),
               Text('\nMaterial Wasted : $number\n'),
+              Text('\nlatitude : $latitude\n'),
+              Text('\nlongitude : $longitude\n'),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context), 
                 child: Text('Back to Entry List'))

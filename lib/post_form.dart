@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as Path;
+import 'package:location/location.dart';
 
 class EntryForm extends StatefulWidget {
   const EntryForm({super.key});
@@ -19,11 +20,19 @@ class _EntryFormState extends State<EntryForm> {
   final picker = ImagePicker();
   final formKey = GlobalKey<FormState>();
   final FirebaseStorage storage = FirebaseStorage.instance;
+  late LocationData locationData;
+  
 
   void getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     image = File(pickedFile!.path);
     setState(() {});
+  }
+
+  void retrieveLocation() async {
+    var locationService = Location();
+    locationData = await locationService.getLocation();
+    setState( () {} );
   }
 
   Future<String> uploadImage() async {
@@ -79,14 +88,17 @@ class _EntryFormState extends State<EntryForm> {
                       child: Text('Post Image'),
                       onPressed: () async {
                         if(formKey.currentState!.validate()) {
-                          String url = await uploadImage();
                           formKey.currentState!.save();
+                          retrieveLocation();
+                          String url = await uploadImage();
                           DateTime now = DateTime.now();
                           String formattedDate = DateFormat('kk:mm:ss EEE d MMM').format(now);
+                          
                           FirebaseFirestore.instance
                               .collection('wasteagram')
                               .add({'imageUrl': url, 'number': number, 'dateTime' : formattedDate, 
-                                    'timeStamp' : FieldValue.serverTimestamp()});
+                                    'timeStamp' : FieldValue.serverTimestamp(), 
+                                    'latitude' : locationData.latitude, 'longitude' : locationData.longitude});
                           Navigator.pop(context);                          
                         }
                       }
