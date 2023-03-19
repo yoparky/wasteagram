@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'post_form.dart';
+import '../widgets/post_form.dart';
 
 class FormRoute extends StatelessWidget {
   const FormRoute({super.key});

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'post_form_scaffold.dart';
-import 'models/post_data.dart';
+import '../models/post_data.dart';
 
 class EntryLists extends StatefulWidget {
   const EntryLists({Key? key}) : super(key: key);
